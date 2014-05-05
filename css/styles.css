@@ -1,0 +1,23 @@
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: block;
+  background: whitesmoke;
+  height: 10px;
+  width: 160px;
+  overflow: hidden;
+}
+
+.cell {
+  float: left;
+  background: #A0A0A0;
+  height: 10px;
+  width: 10px; 
+}
+
+.active {
+  background: #CC0000;
+}
