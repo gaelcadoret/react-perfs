@@ -2,18 +2,31 @@
 var React = require('react/addons'),
     DynamicGrid = require('./grids/dynamicGrid');
 
+var startTime = 0,
+    endTime = 0;
+
 var Graph = React.createClass({
 
     getInitialState: function() {
         return {
             isBenchMarkStart: false,
-            gridSize: 256
+            gridSize: 256,
+            chrono: 0
         }
+    },
+
+    componentWillUpdate: function() {
+        startTime = new Date();
+    },
+
+    componentDidUpdate: function() {
+        endTime = new Date();
     },
 
     startBenchMark: function () {
         this.setState({
-            isBenchMarkStart: true
+            isBenchMarkStart: true,
+            chrono: endTime.getTime() - startTime.getTime()
         });
     },
 
@@ -38,6 +51,9 @@ var Graph = React.createClass({
             <div>
                 <DynamicGrid gridSize={this.state.gridSize} isBenchMarkStart={this.state.isBenchMarkStart} />
                 <div>
+                    {this.state.chrono / 1000} s
+                </div>
+                <div>
                     {this.getNbElements()}
                 </div>
                 <div>
@@ -49,6 +65,7 @@ var Graph = React.createClass({
                     <button onClick={this.switchGrid.bind(this, 1024)}>Switch to 32x32 Grid</button>
                     <button onClick={this.switchGrid.bind(this, 4096)}>Switch to 64x64 Grid</button>
                     <button onClick={this.switchGrid.bind(this, 16384)}>Switch to 128x128 Grid</button>
+                    <button onClick={this.switchGrid.bind(this, 65536)}>Switch to 256x256 Grid</button>
                 </div>
             </div>
         );

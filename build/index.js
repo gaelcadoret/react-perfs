@@ -19072,18 +19072,31 @@ module.exports = warning;
 var React = require('react/addons'),
     DynamicGrid = require('./grids/dynamicGrid');
 
+var startTime = 0,
+    endTime = 0;
+
 var Graph = React.createClass({displayName: 'Graph',
 
     getInitialState: function() {
         return {
             isBenchMarkStart: false,
-            gridSize: 256
+            gridSize: 256,
+            chrono: 0
         }
+    },
+
+    componentWillUpdate: function() {
+        startTime = new Date();
+    },
+
+    componentDidUpdate: function() {
+        endTime = new Date();
     },
 
     startBenchMark: function () {
         this.setState({
-            isBenchMarkStart: true
+            isBenchMarkStart: true,
+            chrono: endTime.getTime() - startTime.getTime()
         });
     },
 
@@ -19108,6 +19121,9 @@ var Graph = React.createClass({displayName: 'Graph',
             React.DOM.div(null, 
                 DynamicGrid( {gridSize:this.state.gridSize, isBenchMarkStart:this.state.isBenchMarkStart} ),
                 React.DOM.div(null, 
+                    this.state.chrono / 1000, " s"
+                ),
+                React.DOM.div(null, 
                     this.getNbElements()
                 ),
                 React.DOM.div(null, 
@@ -19118,7 +19134,8 @@ var Graph = React.createClass({displayName: 'Graph',
                     React.DOM.button( {onClick:this.switchGrid.bind(this, 256)}, "Switch to 16x16 Grid"),
                     React.DOM.button( {onClick:this.switchGrid.bind(this, 1024)}, "Switch to 32x32 Grid"),
                     React.DOM.button( {onClick:this.switchGrid.bind(this, 4096)}, "Switch to 64x64 Grid"),
-                    React.DOM.button( {onClick:this.switchGrid.bind(this, 16384)}, "Switch to 128x128 Grid")
+                    React.DOM.button( {onClick:this.switchGrid.bind(this, 16384)}, "Switch to 128x128 Grid"),
+                    React.DOM.button( {onClick:this.switchGrid.bind(this, 65536)}, "Switch to 256x256 Grid")
                 )
             )
         );
