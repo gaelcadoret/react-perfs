@@ -1,13 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react/addons'),
-    Grid512 = require('./grids/512');
+    DynamicGrid = require('./grids/dynamicGrid');
 
 var Graph = React.createClass({
 
     getInitialState: function() {
         return {
             isBenchMarkStart: false,
-            gridSize: 512
+            gridSize: 256
         }
     },
 
@@ -17,21 +17,39 @@ var Graph = React.createClass({
         });
     },
 
-    getGrid: function () {
-        switch(this.state.gridSize) {
-            case 512: return <Grid512 isBenchMarkStart={this.state.isBenchMarkStart} />
-                break;
+    resetBenchMark: function () {
+        this.setState({
+            isBenchMarkStart: false
+        });
+    },
 
-            default: return <div>Unknown grid size!</div>
-        }
-        
+    switchGrid: function (gridSize) {
+        this.setState({
+            gridSize: gridSize
+        });
+    },
+
+    getNbElements: function () {
+        return this.state.gridSize + ' elements';
     },
 
     render: function() {
         return(
             <div>
-                {this.getGrid()}
-                <button onClick={this.startBenchMark}>GO</button>
+                <DynamicGrid gridSize={this.state.gridSize} isBenchMarkStart={this.state.isBenchMarkStart} />
+                <div>
+                    {this.getNbElements()}
+                </div>
+                <div>
+                    <button onClick={this.startBenchMark}>GO</button>
+                    <button onClick={this.resetBenchMark}>Reset benchmark</button>
+                </div>
+                <div>
+                    <button onClick={this.switchGrid.bind(this, 256)}>Switch to 16x16 Grid</button>
+                    <button onClick={this.switchGrid.bind(this, 1024)}>Switch to 32x32 Grid</button>
+                    <button onClick={this.switchGrid.bind(this, 4096)}>Switch to 64x64 Grid</button>
+                    <button onClick={this.switchGrid.bind(this, 16384)}>Switch to 128x128 Grid</button>
+                </div>
             </div>
         );
     }

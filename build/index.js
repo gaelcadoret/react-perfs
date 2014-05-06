@@ -19070,14 +19070,14 @@ module.exports = warning;
 },{"./emptyFunction":112,"d:\\www\\react-perfs\\js\\node_modules\\browserify\\node_modules\\insert-module-globals\\node_modules\\process\\browser.js":2}],152:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react/addons'),
-    Grid512 = require('./grids/512');
+    DynamicGrid = require('./grids/dynamicGrid');
 
 var Graph = React.createClass({displayName: 'Graph',
 
     getInitialState: function() {
         return {
             isBenchMarkStart: false,
-            gridSize: 512
+            gridSize: 256
         }
     },
 
@@ -19087,21 +19087,39 @@ var Graph = React.createClass({displayName: 'Graph',
         });
     },
 
-    getGrid: function () {
-        switch(this.state.gridSize) {
-            case 512: return Grid512( {isBenchMarkStart:this.state.isBenchMarkStart} )
-                break;
+    resetBenchMark: function () {
+        this.setState({
+            isBenchMarkStart: false
+        });
+    },
 
-            default: return React.DOM.div(null, "Unknown grid size!")
-        }
-        
+    switchGrid: function (gridSize) {
+        this.setState({
+            gridSize: gridSize
+        });
+    },
+
+    getNbElements: function () {
+        return this.state.gridSize + ' elements';
     },
 
     render: function() {
         return(
             React.DOM.div(null, 
-                this.getGrid(),
-                React.DOM.button( {onClick:this.startBenchMark}, "GO")
+                DynamicGrid( {gridSize:this.state.gridSize, isBenchMarkStart:this.state.isBenchMarkStart} ),
+                React.DOM.div(null, 
+                    this.getNbElements()
+                ),
+                React.DOM.div(null, 
+                    React.DOM.button( {onClick:this.startBenchMark}, "GO"),
+                    React.DOM.button( {onClick:this.resetBenchMark}, "Reset benchmark")
+                ),
+                React.DOM.div(null, 
+                    React.DOM.button( {onClick:this.switchGrid.bind(this, 256)}, "Switch to 16x16 Grid"),
+                    React.DOM.button( {onClick:this.switchGrid.bind(this, 1024)}, "Switch to 32x32 Grid"),
+                    React.DOM.button( {onClick:this.switchGrid.bind(this, 4096)}, "Switch to 64x64 Grid"),
+                    React.DOM.button( {onClick:this.switchGrid.bind(this, 16384)}, "Switch to 128x128 Grid")
+                )
             )
         );
     }
@@ -19109,7 +19127,7 @@ var Graph = React.createClass({displayName: 'Graph',
 });
 
 module.exports = Graph;
-},{"./grids/512":153,"react/addons":3}],153:[function(require,module,exports){
+},{"./grids/dynamicGrid":153,"react/addons":3}],153:[function(require,module,exports){
 /** @jsx React.DOM */
 var React = require('react/addons');
 
@@ -19126,7 +19144,7 @@ var Cells = React.createClass({displayName: 'Cells',
             active: this.props.isBenchMarkStart
         });
 
-        var cells = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(function(currentIndex) {
+        var cells = this.props.gridData.map(function(currentIndex) {
             return React.DOM.div( {key:this.getKey(currentIndex), className:classes})
         }.bind(this));
 
@@ -19137,17 +19155,37 @@ var Cells = React.createClass({displayName: 'Cells',
 
 });
 
-var Grid512 = React.createClass({displayName: 'Grid512',
+var dynamicGrid = React.createClass({displayName: 'dynamicGrid',
+
+    getInitialState: function() {
+        return {
+            gridData: this.initGridSize()
+        }
+    },
 
     getKey: function(idx) {
         return 'row_' + idx;
     },
 
-    render: function() {
+    initGridSize: function() {
+        var data = [];
+        var length = Math.sqrt(this.props.gridSize); // user defined length
+        for(var i = 0; i < length; i++) {
+            data.push(i);
+        }
+        return data;
+    },
 
-        var rows = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map(function(currentIndex) {
+    render: function() {
+        var data = [];
+        var length = Math.sqrt(this.props.gridSize); // user defined length
+        for(var i = 0; i < length; i++) {
+            data.push(i);
+        }
+
+        var rows = data.map(function(currentIndex) {
             return React.DOM.div( {key:this.getKey(currentIndex), className:"row"}, 
-                        Cells( {idx:currentIndex, isBenchMarkStart:this.props.isBenchMarkStart} )
+                        Cells( {idx:currentIndex, gridData:data, isBenchMarkStart:this.props.isBenchMarkStart} )
                     )
         }.bind(this));
 
@@ -19160,5 +19198,5 @@ var Grid512 = React.createClass({displayName: 'Grid512',
 
 });
 
-module.exports = Grid512;
+module.exports = dynamicGrid;
 },{"react/addons":3}]},{},[1])
