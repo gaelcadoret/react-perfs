@@ -16,11 +16,17 @@ var Graph = React.createClass({
     },
 
     componentWillUpdate: function() {
+        console.log('*** componentWillUpdate ***');
         startTime = new Date();
     },
 
     componentDidUpdate: function() {
+        console.log('*** componentDidUpdate ***');
         endTime = new Date();
+
+//        this.setState({
+//            chrono: endTime.getTime() - startTime.getTime()
+//        });
     },
 
     startBenchMark: function () {
@@ -32,21 +38,25 @@ var Graph = React.createClass({
 
     resetBenchMark: function () {
         this.setState({
-            isBenchMarkStart: false
+            isBenchMarkStart: false,
+            chrono: endTime.getTime() - startTime.getTime()
         });
     },
 
     switchGrid: function (gridSize) {
+        console.log('*** switchGrid ***');
         this.setState({
             gridSize: gridSize
         });
     },
 
     getNbElements: function () {
+        console.log('*** getNbElements ***');
         return this.state.gridSize + ' elements';
     },
 
     render: function() {
+        console.log('*** render ***');
         return(
             <div>
                 <DynamicGrid gridSize={this.state.gridSize} isBenchMarkStart={this.state.isBenchMarkStart} />

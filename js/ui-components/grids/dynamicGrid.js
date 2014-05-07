@@ -4,7 +4,7 @@ var React = require('react/addons');
 var Cells = React.createClass({
 
     getKey: function(idx) {
-        return 'cell_' + idx;
+        return 'cell_' + this.props.idx + '_' + idx;
     },
 
     render: function() {
@@ -15,7 +15,7 @@ var Cells = React.createClass({
         });
 
         var cells = this.props.gridData.map(function(currentIndex) {
-            return <div key={this.getKey(currentIndex)} className={classes}></div>
+            return <div key={this.getKey(currentIndex)} data-idx={this.getKey(currentIndex)} className={classes}></div>
         }.bind(this));
 
         return (

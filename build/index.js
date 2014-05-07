@@ -19086,11 +19086,17 @@ var Graph = React.createClass({displayName: 'Graph',
     },
 
     componentWillUpdate: function() {
+        console.log('*** componentWillUpdate ***');
         startTime = new Date();
     },
 
     componentDidUpdate: function() {
+        console.log('*** componentDidUpdate ***');
         endTime = new Date();
+
+//        this.setState({
+//            chrono: endTime.getTime() - startTime.getTime()
+//        });
     },
 
     startBenchMark: function () {
@@ -19102,21 +19108,25 @@ var Graph = React.createClass({displayName: 'Graph',
 
     resetBenchMark: function () {
         this.setState({
-            isBenchMarkStart: false
+            isBenchMarkStart: false,
+            chrono: endTime.getTime() - startTime.getTime()
         });
     },
 
     switchGrid: function (gridSize) {
+        console.log('*** switchGrid ***');
         this.setState({
             gridSize: gridSize
         });
     },
 
     getNbElements: function () {
+        console.log('*** getNbElements ***');
         return this.state.gridSize + ' elements';
     },
 
     render: function() {
+        console.log('*** render ***');
         return(
             React.DOM.div(null, 
                 DynamicGrid( {gridSize:this.state.gridSize, isBenchMarkStart:this.state.isBenchMarkStart} ),
@@ -19151,7 +19161,7 @@ var React = require('react/addons');
 var Cells = React.createClass({displayName: 'Cells',
 
     getKey: function(idx) {
-        return 'cell_' + idx;
+        return 'cell_' + this.props.idx + '_' + idx;
     },
 
     render: function() {
@@ -19162,7 +19172,7 @@ var Cells = React.createClass({displayName: 'Cells',
         });
 
         var cells = this.props.gridData.map(function(currentIndex) {
-            return React.DOM.div( {key:this.getKey(currentIndex), className:classes})
+            return React.DOM.div( {key:this.getKey(currentIndex), 'data-idx':this.getKey(currentIndex), className:classes})
         }.bind(this));
 
         return (
